@@ -30,6 +30,7 @@ def convertXMLDataToSqlLines(fileName):
 
 
 
+
 class TestConverter(unittest.TestCase):
     def test_add(self):
         fileName = createTxtFile()
