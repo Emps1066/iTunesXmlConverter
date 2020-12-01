@@ -23,12 +23,26 @@ def setFirstInsertLine(fileName):
 
 
 def convertXMLDataToSqlLines(fileName):
-    with open("XMLFile/ITUNES-Convert.xml", 'r') as xmlFile:
+    trackList = getTrackList()
+    print("track list obtained")
+    print(str(len(trackList)))
+
+def seperatePlaylistsFromTracks():
+    print("===========================")
+
+
+def getTrackList():
+    with open("XMLFiles/ITUNES-Convert.xml", 'r') as xmlFile:
         print("=================================")
         tree = ElementTree.parse(xmlFile)
         root = tree.getroot()
-
-
+        mainDict = root.findall('dict')
+        for item in list(mainDict[0]):
+            if item.tag == "dict":
+                tracksDict = item
+                break
+        trackList = list(tracksDict.findall('dict'))
+    return trackList
 
 
 class TestConverter(unittest.TestCase):

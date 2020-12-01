@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+
 ### STS ###
 .apt_generated
 .classpath
@@ -36,3 +37,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+###SQL folder exemption###
+sqlInserts/*
+!sqlInserts/.gitkeep
