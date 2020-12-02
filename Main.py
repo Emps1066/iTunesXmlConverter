@@ -27,11 +27,12 @@ def convertXMLDataToSqlLines(fileName):
     print("track list obtained")
     print(str(len(trackList)))
 
+
 def seperatePlaylistsFromTracks():
     print("===========================")
 
 
-def getTrackList():
+def createTrackList():
     with open("XMLFiles/ITUNES-Convert.xml", 'r') as xmlFile:
         print("=================================")
         tree = ElementTree.parse(xmlFile)
@@ -42,12 +43,14 @@ def getTrackList():
                 tracksDict = song
                 break
         trackList = list(tracksDict.findall('dict'))
-        print(trackList)
-        #for child in dictRoot:
-         #   ElementTree.dump(child)
-
-
-
+        dictTemp = {}
+        finalList = []
+        for i in range(len(trackList)):
+            for j in range(len(trackList[i])):
+                if trackList[i][j].tag == "key":
+                    dictTemp[trackList[i][j].text] = trackList[i][j + 1].text
+            finalList.append(dictTemp)
+        print(finalList[0])
 
 
 class TestConverter(unittest.TestCase):
@@ -60,7 +63,7 @@ class TestConverter(unittest.TestCase):
 def main():
     fileName = createTxtFile()
     setFirstInsertLine(fileName)
-    getTrackList()
+    createTrackList()
 
 
 if __name__ == "__main__":
