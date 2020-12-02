@@ -36,13 +36,18 @@ def getTrackList():
         print("=================================")
         tree = ElementTree.parse(xmlFile)
         root = tree.getroot()
-        mainDict = root.findall('dict')
-        for item in list(mainDict[0]):
-            if item.tag == "dict":
-                tracksDict = item
+        dictRoot = root.findall('dict')
+        for song in list(dictRoot[0]):
+            if song.tag == "dict":
+                tracksDict = song
                 break
         trackList = list(tracksDict.findall('dict'))
-    return trackList
+        print(trackList)
+        #for child in dictRoot:
+         #   ElementTree.dump(child)
+
+
+
 
 
 class TestConverter(unittest.TestCase):
@@ -55,7 +60,7 @@ class TestConverter(unittest.TestCase):
 def main():
     fileName = createTxtFile()
     setFirstInsertLine(fileName)
-    convertXMLDataToSqlLines(fileName)
+    getTrackList()
 
 
 if __name__ == "__main__":
