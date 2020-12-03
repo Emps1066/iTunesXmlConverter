@@ -1,7 +1,5 @@
 from datetime import datetime
 from xml.etree import ElementTree
-import unittest
-import os
 
 importantTags = ['TrackID', 'Name', 'Artist', 'AlbumArtist', 'Genre', 'Kind', 'Size', 'TotalTime', " \
                       "'TrackNumber', 'Year', 'DateModified', 'DateAdded', 'BitRate', 'SampleRate', 'PlayCount',
@@ -17,31 +15,32 @@ def createTxtFile():
     return sqlFileName
 
 
-def setFirstInsertLine(fileName):
-    file = open(fileName, 'w+')
+def setFirstInsertLine():
     insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, Genre, Kind, Size, TotalTime, " \
                       "TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating," \
                       "ArtworkCount, Location)"
-    file.write(insertStatement)
-    file.write("\n")
-    file.close()
+    return insertStatement
+
 
 #TODO finish algorithm
-def convertXMLDataToSqlLines(fileName):
+def convertXMLDataToSqlStatement():
     trackList = createTrackList()
     print("track list obtained")
+    masterInsertStatement = "\nVALUES "
     for song in trackList:
-        insertStatementLine = "("
+        insertStatementLine = "( "
         songKeys = song.keys()
         for tag in importantTags:
             if tag in songKeys:
-
+                insertStatementLine = insertStatementLine + '"' + song.get(tag) + '", '
             else:
+                insertStatementLine = insertStatementLine + "NULL, "
+        insertStatementLine = insertStatementLine + "),\n"
+        masterInsertStatement = masterInsertStatement + insertStatementLine
+    return masterInsertStatement
 
 
-
-
-# TODO reformat this method
+#TODO reformat this method
 def createTrackList():
     with open("XMLFiles/ITUNES-Convert.xml", 'r') as xmlFile:
         print("=================================")
@@ -63,17 +62,19 @@ def createTrackList():
         return finalList
 
 
-class TestConverter(unittest.TestCase):
-    def test_add(self):
-        fileName = createTxtFile()
-        self.assertTrue(open(fileName, 'r'))
-        self.tearDown(os.remove(fileName))
+def convertSqlStatementIntoTxt(fileName, insertStatement):
+    file = open(fileName, 'w+')
+    sqlScript = setFirstInsertLine() + insertStatement
+    file.write(sqlScript)
+    file.write("\n")
+    file.close()
 
 
 def main():
     fileName = createTxtFile()
-    setFirstInsertLine(fileName)
-    convertXMLDataToSqlLines(fileName)
+    insertStatement = convertXMLDataToSqlStatement()
+    convertSqlStatementIntoTxt(fileName, insertStatement)
+    print("Itunes library has successfully being converted into sql")
 
 
 if __name__ == "__main__":
