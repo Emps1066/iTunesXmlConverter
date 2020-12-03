@@ -3,6 +3,11 @@ from xml.etree import ElementTree
 import unittest
 import os
 
+importantTags = ['TrackID', 'Name', 'Artist', 'AlbumArtist', 'Genre', 'Kind', 'Size', 'TotalTime', " \
+                      "'TrackNumber', 'Year', 'DateModified', 'DateAdded', 'BitRate', 'SampleRate', 'PlayCount',
+                 'SkipCount', 'Rating', " \
+                      "'ArtworkCount', 'Location']
+
 
 def createTxtFile():
     fileCreationDate = datetime.now()
@@ -21,17 +26,22 @@ def setFirstInsertLine(fileName):
     file.write("\n")
     file.close()
 
-
+#TODO finish algorithm
 def convertXMLDataToSqlLines(fileName):
-    trackList = getTrackList()
+    trackList = createTrackList()
     print("track list obtained")
-    print(str(len(trackList)))
+    for song in trackList:
+        insertStatementLine = "("
+        songKeys = song.keys()
+        for tag in importantTags:
+            if tag in songKeys:
+
+            else:
 
 
-def seperatePlaylistsFromTracks():
-    print("===========================")
 
 
+# TODO reformat this method
 def createTrackList():
     with open("XMLFiles/ITUNES-Convert.xml", 'r') as xmlFile:
         print("=================================")
@@ -50,7 +60,7 @@ def createTrackList():
                 if trackList[i][j].tag == "key":
                     dictTemp[trackList[i][j].text] = trackList[i][j + 1].text
             finalList.append(dictTemp)
-        print(finalList[0])
+        return finalList
 
 
 class TestConverter(unittest.TestCase):
@@ -63,7 +73,7 @@ class TestConverter(unittest.TestCase):
 def main():
     fileName = createTxtFile()
     setFirstInsertLine(fileName)
-    createTrackList()
+    convertXMLDataToSqlLines(fileName)
 
 
 if __name__ == "__main__":
