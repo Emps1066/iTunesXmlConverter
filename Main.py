@@ -22,7 +22,8 @@ def setFirstInsertLine():
     return insertStatement
 
 
-#TODO finish algorithm
+# TODO finish algorithm
+# TODO remove unwanted commas
 def convertXMLDataToSqlStatement():
     trackList = createTrackList()
     print("track list obtained")
@@ -40,26 +41,28 @@ def convertXMLDataToSqlStatement():
     return masterInsertStatement
 
 
-#TODO reformat this method
+# TODO reformat this method
 def createTrackList():
+
+    finalList = []
     with open("XMLFiles/ITUNES-Convert.xml", 'r') as xmlFile:
         print("=================================")
         tree = ElementTree.parse(xmlFile)
         root = tree.getroot()
         dictRoot = root.findall('dict')
-        for song in list(dictRoot[0]):
-            if song.tag == "dict":
-                tracksDict = song
+        for item in list(dictRoot[0]):
+            if item.tag == "dict":
+                tracksDict = item
                 break
         trackList = list(tracksDict.findall('dict'))
-        dictTemp = {}
-        finalList = []
+        print(trackList[3000][3].text)
         for i in range(len(trackList)):
+            dictTemp = {}
             for j in range(len(trackList[i])):
-                if trackList[i][j].tag == "key":
-                    dictTemp[trackList[i][j].text] = trackList[i][j + 1].text
+                if trackList[i][j].tag == 'key':
+                    dictTemp[trackList[i][j].text] = trackList[i][j+1].text
             finalList.append(dictTemp)
-        return finalList
+    return finalList
 
 
 def convertSqlStatementIntoTxt(fileName, insertStatement):
