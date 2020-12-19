@@ -1,0 +1,9 @@
+Hello, this program will convert your Itunes XML Library folder and turn it into an SQL statement allowing you to put
+your Itunes library data into an SQL database
+
+To do this, place your xml library file into the XMLFiles folder, advised to only have one file in there at a time.
+Then simply run the program and you will see a txt file has been created in the sqlInserts folder. All SQL statement
+text files will be dated, so if you run it and want to find the newly created file, it will be the one with the most
+recent time and date.
+
+Thank you!

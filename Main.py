@@ -1,10 +1,10 @@
 from datetime import datetime
 from xml.etree import ElementTree
 
-importantTags = ['TrackID', 'Name', 'Artist', 'AlbumArtist', 'Genre', 'Kind', 'Size', 'TotalTime', \
-                      'TrackNumber', 'Year', 'DateModified', 'DateAdded', 'BitRate', 'SampleRate', 'PlayCount',
-                 'SkipCount', 'Rating', \
-                      'ArtworkCount', 'Location']
+importantTags = ['TrackID', 'Name', 'Artist', 'Album Artist', 'Composer' 'Genre', 'Kind', 'Size', 'Total Time',
+                 'Track Number', 'Year', 'Date Modified', 'Date Added', 'Bit Rate', 'Sample Rate', 'Play Count',
+                 'Skip Count', 'Rating',
+                 'Artwork Count', 'Location']
 
 
 def createTxtFile():
@@ -16,14 +16,13 @@ def createTxtFile():
 
 
 def setFirstInsertLine():
-    insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, Genre, Kind, Size, TotalTime, " \
+    insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, " \
+                      "Composer, Genre, Kind, Size, TotalTime, " \
                       "TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating," \
                       "ArtworkCount, Location)"
     return insertStatement
 
 
-# TODO finish algorithm
-# TODO remove unwanted commas
 def convertXMLDataToSqlStatement():
     trackList = createTrackList()
     print("track list obtained")
@@ -43,12 +42,10 @@ def convertXMLDataToSqlStatement():
     return masterInsertStatement
 
 
-# TODO reformat this method
+# TODO allow user to choose file
 def createTrackList():
-
     finalList = []
     with open("XMLFiles/ITUNES-Convert.xml", 'r') as xmlFile:
-        print("=================================")
         tree = ElementTree.parse(xmlFile)
         root = tree.getroot()
         dictRoot = root.findall('dict')
@@ -57,7 +54,6 @@ def createTrackList():
                 tracksDict = item
                 break
         trackList = list(tracksDict.findall('dict'))
-        print(trackList[3000][3].text)
         for i in range(len(trackList)):
             dictTemp = {}
             for j in range(len(trackList[i])):
