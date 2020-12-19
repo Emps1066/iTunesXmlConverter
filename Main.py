@@ -1,10 +1,10 @@
 from datetime import datetime
 from xml.etree import ElementTree
 
-importantTags = ['TrackID', 'Name', 'Artist', 'AlbumArtist', 'Genre', 'Kind', 'Size', 'TotalTime', " \
-                      "'TrackNumber', 'Year', 'DateModified', 'DateAdded', 'BitRate', 'SampleRate', 'PlayCount',
-                 'SkipCount', 'Rating', " \
-                      "'ArtworkCount', 'Location']
+importantTags = ['TrackID', 'Name', 'Artist', 'AlbumArtist', 'Genre', 'Kind', 'Size', 'TotalTime', \
+                      'TrackNumber', 'Year', 'DateModified', 'DateAdded', 'BitRate', 'SampleRate', 'PlayCount',
+                 'SkipCount', 'Rating', \
+                      'ArtworkCount', 'Location']
 
 
 def createTxtFile():
@@ -36,8 +36,10 @@ def convertXMLDataToSqlStatement():
                 insertStatementLine = insertStatementLine + '"' + song.get(tag) + '", '
             else:
                 insertStatementLine = insertStatementLine + "NULL, "
+        insertStatementLine = insertStatementLine[:-2]
         insertStatementLine = insertStatementLine + "),\n"
         masterInsertStatement = masterInsertStatement + insertStatementLine
+    masterInsertStatement = masterInsertStatement[:-2]
     return masterInsertStatement
 
 
