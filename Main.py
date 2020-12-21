@@ -5,7 +5,7 @@ importantTags = ['TrackID', 'Name', 'Artist', 'Album Artist', 'Composer' 'Genre'
                  'Track Number', 'Year', 'Date Modified', 'Date Added', 'Bit Rate', 'Sample Rate', 'Play Count',
                  'Skip Count', 'Rating',
                  'Artwork Count', 'Location']
-
+UUID = False
 
 def createTxtFile():
     fileCreationDate = datetime.now()
@@ -16,6 +16,11 @@ def createTxtFile():
 
 
 def setFirstInsertLine():
+    if(UUID = True):
+        insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, " \
+                          "Composer, Genre, Kind, Size, TotalTime, " \
+                          "TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating," \
+                          "ArtworkCount, Location)"
     insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, " \
                       "Composer, Genre, Kind, Size, TotalTime, " \
                       "TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating," \
@@ -70,9 +75,16 @@ def convertSqlStatementIntoTxt(fileName, insertStatement):
     file.write("\n")
     file.close()
 
+def enableUUIDFunctionality():
+    val = input("Would you like to use UUID for this database? (Enter Y if yes else enter any other key:")
+    if val == "y" or val == "Y":
+        UUID = True
+        print("UUID has being enabled")
+
 
 def main():
     fileName = createTxtFile()
+    enableUUIDFunctionality()
     insertStatement = convertXMLDataToSqlStatement()
     convertSqlStatementIntoTxt(fileName, insertStatement)
     print("Itunes library has successfully being converted into sql")
