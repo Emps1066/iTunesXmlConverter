@@ -7,3 +7,8 @@ text files will be dated, so if you run it and want to find the newly created fi
 recent time and date.
 
 Thank you!
+
+Some system information:
+
+    UUID: If making use of UUID you will have to make sure you establish a BINARY PRIMARY KEY for your
+    CREATE TABLE command within your SQL statement

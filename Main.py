@@ -1,11 +1,15 @@
 from datetime import datetime
 from xml.etree import ElementTree
+import yaml
 
-importantTags = ['TrackID', 'Name', 'Artist', 'Album Artist', 'Composer' 'Genre', 'Kind', 'Size', 'Total Time',
+with open("config.YAML", "r") as configFile:
+    configData = yaml.safe_load(configFile)
+config = configData
+importantTags = ['Name', 'Artist', 'Album Artist', 'Composer' 'Genre', 'Kind', 'Size', 'Total Time',
                  'Track Number', 'Year', 'Date Modified', 'Date Added', 'Bit Rate', 'Sample Rate', 'Play Count',
                  'Skip Count', 'Rating',
                  'Artwork Count', 'Location']
-UUID = False
+
 
 def createTxtFile():
     fileCreationDate = datetime.now()
@@ -16,15 +20,13 @@ def createTxtFile():
 
 
 def setFirstInsertLine():
-    if(UUID = True):
-        insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, " \
-                          "Composer, Genre, Kind, Size, TotalTime, " \
-                          "TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating," \
-                          "ArtworkCount, Location)"
-    insertStatement = "INSERT INTO table_name (TrackID, Name, Artist, AlbumArtist, " \
-                      "Composer, Genre, Kind, Size, TotalTime, " \
-                      "TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating," \
-                      "ArtworkCount, Location)"
+    insertStatement = ""
+    if config.get('UUID'):
+        insertStatement = config['InsertStatements']['InsertUUID']
+        print(insertStatement)
+    else:
+        insertStatement = config['InsertStatements']['InsertNotUUID']
+    print(type(insertStatement))
     return insertStatement
 
 
@@ -33,7 +35,10 @@ def convertXMLDataToSqlStatement():
     print("track list obtained")
     masterInsertStatement = "\nVALUES "
     for song in trackList:
-        insertStatementLine = "( "
+        if config.get("UUID"):
+            insertStatementLine = "(UUID_TO_BIN(UUID(),"
+        else:
+            insertStatementLine = "( "
         songKeys = song.keys()
         for tag in importantTags:
             if tag in songKeys:
@@ -63,7 +68,7 @@ def createTrackList():
             dictTemp = {}
             for j in range(len(trackList[i])):
                 if trackList[i][j].tag == 'key':
-                    dictTemp[trackList[i][j].text] = trackList[i][j+1].text
+                    dictTemp[trackList[i][j].text] = trackList[i][j + 1].text
             finalList.append(dictTemp)
     return finalList
 
@@ -75,11 +80,15 @@ def convertSqlStatementIntoTxt(fileName, insertStatement):
     file.write("\n")
     file.close()
 
+
 def enableUUIDFunctionality():
-    val = input("Would you like to use UUID for this database? (Enter Y if yes else enter any other key:")
+    val = input("Would you like to use UUID for this database? Enter Y if yes else enter any other key:")
     if val == "y" or val == "Y":
-        UUID = True
+        config.update(UUID=True)
         print("UUID has being enabled")
+    else:
+        print("UUID has being disabled")
+        config.update(UUID=False)
 
 
 def main():

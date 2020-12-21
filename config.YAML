@@ -1,0 +1,10 @@
+UUID: False
+InsertStatements:
+  InsertUUID: "INSERT INTO table_name (id, Name, Artist, AlbumArtist,
+    Composer, Genre, Kind, Size, TotalTime,
+    TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating,
+    ArtworkCount, Location)"
+  InsertNotUUID: "INSERT INTO table_name (Name, Artist, AlbumArtist,
+    Composer, Genre, Kind, Size, TotalTime,
+    TrackNumber, Year, DateModified, DateAdded, BitRate, SampleRate, PlayCount, SkipCount, Rating,
+    ArtworkCount, Location)"
