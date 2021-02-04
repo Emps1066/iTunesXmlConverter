@@ -5,10 +5,11 @@ import yaml
 with open("config.YAML", "r") as configFile:
     configData = yaml.safe_load(configFile)
 config = configData
-importantTags = ['Name', 'Artist', 'Album Artist', 'Composer' 'Genre', 'Kind', 'Size', 'Total Time',
+importantTags = ['Name', 'Artist', 'Album Artist', 'Composer', 'Album', 'Genre', 'Kind', 'Size', 'Total Time',
                  'Track Number', 'Year', 'Date Modified', 'Date Added', 'Bit Rate', 'Sample Rate', 'Play Count',
                  'Skip Count', 'Rating',
-                 'Artwork Count', 'Location']
+                 'Artwork Count']
+albumImportantTags = ['Artist', 'Album Artist', 'Album', 'Genre', "year"]
 
 
 def createTxtFile():
@@ -19,28 +20,35 @@ def createTxtFile():
     return sqlFileName
 
 
+#TODO fix to allow user to choose style of main insert statement
 def setFirstInsertLine():
     insertStatement = ""
     if config.get('UUID'):
         insertStatement = config['InsertStatements']['InsertUUID']
-        print(insertStatement)
     else:
         insertStatement = config['InsertStatements']['InsertNotUUID']
-    print(type(insertStatement))
+    insertStatement = config['InsertStatements']['AlbumInsertUUID']
     return insertStatement
 
 
-def convertXMLDataToSqlStatement():
-    trackList = createTrackList()
-    print("track list obtained")
+def convertXMLDataToSongSqlStatement():
+    val = input("Would you like to get song SQL statements, or album SQL statements?")
+    if val == "y" or val == "Y":
+        chosenImportantTags = albumImportantTags
+        print("S")
+        trackList = createAlbumTrackList(createTrackList())
+    else:
+        trackList = createTrackList()
+        chosenImportantTags = importantTags
     masterInsertStatement = "\nVALUES "
     for song in trackList:
+        tracking = 0
         if config.get("UUID"):
             insertStatementLine = "(UUID_TO_BIN(UUID(),"
         else:
             insertStatementLine = "( "
         songKeys = song.keys()
-        for tag in importantTags:
+        for tag in chosenImportantTags:
             if tag in songKeys:
                 insertStatementLine = insertStatementLine + '"' + song.get(tag) + '", '
             else:
@@ -50,6 +58,18 @@ def convertXMLDataToSqlStatement():
         masterInsertStatement = masterInsertStatement + insertStatementLine
     masterInsertStatement = masterInsertStatement[:-2]
     return masterInsertStatement
+
+
+def createAlbumTrackList(trackList):
+    albums = []
+    #artists = []
+    newTrackList = []
+    for item in trackList:
+        if item.get("Album") not in albums:
+            newTrackList.append(item)
+            albums.append(item.get("Album"))
+            #artists.append(item.get("Artist"))
+    return newTrackList
 
 
 # TODO allow user to choose file
@@ -94,7 +114,7 @@ def enableUUIDFunctionality():
 def main():
     fileName = createTxtFile()
     enableUUIDFunctionality()
-    insertStatement = convertXMLDataToSqlStatement()
+    insertStatement = convertXMLDataToSongSqlStatement()
     convertSqlStatementIntoTxt(fileName, insertStatement)
     print("Itunes library has successfully being converted into sql")
 
