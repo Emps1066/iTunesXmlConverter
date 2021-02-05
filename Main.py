@@ -9,7 +9,7 @@ importantTags = ['Name', 'Artist', 'Album Artist', 'Composer', 'Album', 'Genre',
                  'Track Number', 'Year', 'Date Modified', 'Date Added', 'Bit Rate', 'Sample Rate', 'Play Count',
                  'Skip Count', 'Rating',
                  'Artwork Count']
-albumImportantTags = ['Artist', 'Album Artist', 'Album', 'Genre', "year"]
+albumImportantTags = ['Artist', 'Album Artist', 'Album', 'Genre', 'Year']
 
 
 def createTxtFile():
@@ -44,7 +44,7 @@ def convertXMLDataToSongSqlStatement():
     for song in trackList:
         tracking = 0
         if config.get("UUID"):
-            insertStatementLine = "(UUID_TO_BIN(UUID(),"
+            insertStatementLine = "(UUID_TO_BIN(UUID()),"
         else:
             insertStatementLine = "( "
         songKeys = song.keys()
